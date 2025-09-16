@@ -137,9 +137,6 @@ const PAL = [
   getCss('--brown')
 ];
 
-const BASE_HEAD_R = 26, BASE_SEG_R = 12;
-let snake = { head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
-let items = [], hazards = [];
 
 const BASE_HEAD_R = 26, BASE_SEG_R = 12;
 let snake = { head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
@@ -380,6 +377,7 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
 
