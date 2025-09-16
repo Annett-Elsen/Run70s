@@ -217,13 +217,13 @@ function startFromUI(){ try{SND.ensure()}catch{}; snake.speed = +speedInput.valu
 /* ===== Spawns ===== */
 function spawnCollectible(){
   const pad=50, x=rnd(pad,W-pad), y=rnd(pad,H-pad);
-  const PAL=[getCss('--avocado'),getCss('--mustard'),getCss('--burnt'),getCss('--teal'),getCss('--brown')];
-  const color = PAL[(Math.random()*PAL.length)|0];
+  const color = PAL[(Math.random()*PAL.length)|0]; // <-- globale PAL benutzen
   const big = Math.random()<0.22;
   let r = BASE_SEG_R + (big? rnd(2, snake.head.r-5 - BASE_SEG_R):0);
   r = Math.min(r, snake.head.r-5);
   items.push(new Item(x,y,r,color, SHAPES[(Math.random()*SHAPES.length)|0]));
 }
+
 function spawnHazard(){
   const pad=60, x=rnd(pad,W-pad), y=rnd(pad,H-pad);
   const r = rnd(12, Math.min(22, snake.head.r-4));
@@ -370,6 +370,7 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
 
