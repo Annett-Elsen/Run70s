@@ -126,19 +126,14 @@ Head.prototype.draw=function(){
 };
 
 /* ===== Game State ===== */
-let items=[], hazards=[];
+const BASE_HEAD_R = 26, BASE_SEG_R = 12;
+let snake = { head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
+let items = [], hazards = [];      // <-- nur HIER definieren!
 let running=false, paused=false, tStart=0, timeSec=0, score=0, lastSpawn=0, lastHaz=0;
-/* ===== Game State ===== */
-const PAL=[getCss('--avocado'),getCss('--mustard'),getCss('--burnt'),getCss('--teal'),getCss('--brown')];
-function getCss(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
-const BASE_HEAD_R=26, BASE_SEG_R=12;
-let snake={ head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
-let items=[], hazards=[];
-let running=false, paused=false, tStart=0, timeSec=0, score=0, lastSpawn=0, lastHaz=0;
-let hs=loadHS(); 
-let mouse={x:W*.5,y:H*.5,inside:false};
-let touchActive=false;          // NEU: merkt, ob Finger aktiv ist
-const GAP=110;                  // NEU: Abstand Finger ↔ Kopf (px, gern anpassen)
+let hs = loadHS();
+let mouse = { x:W*.5, y:H*.5, inside:false };
+let touchActive = false;           // (falls du schon eingefügt hast)
+const GAP = 110;                   // (falls du schon eingefügt hast)
 let speedInput=null, speedVal=null;
 
 
@@ -370,6 +365,7 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
 
