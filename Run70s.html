@@ -126,6 +126,21 @@ Head.prototype.draw=function(){
 };
 
 /* ===== Game State ===== */
+function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+// NEU (muss VOR spawnCollectible() existieren)
+const PAL = [
+  getCss('--avocado'),
+  getCss('--mustard'),
+  getCss('--burnt'),
+  getCss('--teal'),
+  getCss('--brown')
+];
+
+const BASE_HEAD_R = 26, BASE_SEG_R = 12;
+let snake = { head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
+let items = [], hazards = [];
+
 const BASE_HEAD_R = 26, BASE_SEG_R = 12;
 let snake = { head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
 let items = [], hazards = [];      // <-- nur HIER definieren!
@@ -365,6 +380,7 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
 
