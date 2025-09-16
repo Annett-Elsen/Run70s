@@ -1,0 +1,16 @@
+{
+  "name": "Run – 70s Edition",
+  "short_name": "Run70s",
+  "id": "run70s.app",
+  "description": "Sammle bunte Retro-Formen, meide die schwarzen! Ein kleines Maus-Arcade-Spiel.",
+  "start_url": "./Run70s.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#f3eadf",
+  "theme_color": "#6b8a3a",
+  "icons": [
+    { "src": "./Run192-01.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./Run512-01.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
