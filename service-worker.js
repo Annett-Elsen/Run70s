@@ -1,12 +1,12 @@
-const CACHE_VERSION = 'run70s-v3';
+const CACHE_VERSION = 'run70s-v4'; // Version erhöhen = Update erzwingen
 const APP_SHELL = [
-  './',
   './Run70s.html',
   './manifest.webmanifest',
   './Run192-01.png',
   './Run512-01.png',
   './service-worker.js'
 ];
+
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)));
