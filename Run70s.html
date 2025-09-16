@@ -132,8 +132,20 @@ const BASE_HEAD_R=26, BASE_SEG_R=12;
 let snake={ head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
 let items=[], hazards=[];
 let running=false, paused=false, tStart=0, timeSec=0, score=0, lastSpawn=0, lastHaz=0;
-let hs=loadHS(); let mouse={x:W*.5,y:H*.5,inside:false};
+/* ===== Game State ===== */
+const PAL=[getCss('--avocado'),getCss('--mustard'),getCss('--burnt'),getCss('--teal'),getCss('--brown')];
+function getCss(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+const BASE_HEAD_R=26, BASE_SEG_R=12;
+let snake={ head:new Head(W*.5,H*.5,BASE_HEAD_R), parts:[], speed:4.0, spacing:20 };
+let items=[], hazards=[];
+let running=false, paused=false, tStart=0, timeSec=0, score=0, lastSpawn=0, lastHaz=0;
+let hs=loadHS(); 
+let mouse={x:W*.5,y:H*.5,inside:false};
+let touchActive=false;          // NEU: merkt, ob Finger aktiv ist
+const GAP=110;                  // NEU: Abstand Finger ↔ Kopf (px, gern anpassen)
 let speedInput=null, speedVal=null;
+
+
 
 /* ===== Input ===== */
 canvas.addEventListener("pointermove",e=>{const r=canvas.getBoundingClientRect(); mouse.x=(e.clientX-r.left)*(W/r.width); mouse.y=(e.clientY-r.top)*(H/r.height); mouse.inside=true;});
@@ -141,6 +153,9 @@ canvas.addEventListener("pointerleave",()=>mouse.inside=false);
   // ---- Touch-Fallback für iOS ----
 canvas.addEventListener('touchstart', onTouch, {passive:false});
 canvas.addEventListener('touchmove',  onTouch, {passive:false});
+canvas.addEventListener('touchend',  ()=>{ touchActive=false; }, {passive:false});   // NEU
+canvas.addEventListener('touchcancel',()=>{ touchActive=false; }, {passive:false});  // NEU
+
 
 function onTouch(e){
   const t = e.touches[0];
@@ -149,6 +164,7 @@ function onTouch(e){
   mouse.y = (t.clientY - r.top)  * (H / r.height);
   mouse.inside = true;
   e.preventDefault(); // verhindert Scrollen/Zoomen auf iOS
+  touchActive = true; // NEU
 }
 
 addEventListener("keydown",e=>{
@@ -249,11 +265,35 @@ function loop(){
   if(now-lastSpawn>2000-Math.min(1000,score*9)){ spawnCollectible(); lastSpawn=now; }
   if(now-lastHaz>3500-Math.min(1800,score*7)){ if(hazards.length<16) spawnHazard(); lastHaz=now; }
 
-  // movement
-  const tx=clamp(mouse.x||snake.head.x,10,W-10), ty=clamp(mouse.y||snake.head.y,10,H-10);
-  const dx=tx-snake.head.x, dy=ty-snake.head.y, d=Math.hypot(dx,dy)||1, sp=Math.min(snake.speed,d);
-  snake.head.x += (dx/d)*sp; snake.head.y += (dy/d)*sp;
-  snake.head.x=clamp(snake.head.x,14,W-14); snake.head.y=clamp(snake.head.y,14,H-14);
+  // movement (mit Finger-Abstand auf Touch)
+let goalX = mouse.x ?? snake.head.x;
+let goalY = mouse.y ?? snake.head.y;
+
+if (touchActive){
+  const dx0 = goalX - snake.head.x;
+  const dy0 = goalY - snake.head.y;
+  const d0  = Math.hypot(dx0,dy0) || 1;
+  if (d0 > GAP){
+    goalX -= (dx0 / d0) * GAP;
+    goalY -= (dy0 / d0) * GAP;
+  } else {
+    goalX = snake.head.x;
+    goalY = snake.head.y;
+  }
+}
+
+const tx = clamp(goalX, 10, W-10);
+const ty = clamp(goalY, 10, H-10);
+
+const dx = tx - snake.head.x, dy = ty - snake.head.y;
+const d  = Math.hypot(dx,dy) || 1;
+const sp = Math.min(snake.speed, d);
+
+snake.head.x += (dx/d) * sp; 
+snake.head.y += (dy/d) * sp;
+snake.head.x = clamp(snake.head.x,14,W-14); 
+snake.head.y = clamp(snake.head.y,14,H-14);
+
 
   // follow
   const segs=[snake.head].concat(snake.parts);
@@ -334,6 +374,7 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
 
