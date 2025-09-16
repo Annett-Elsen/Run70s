@@ -17,6 +17,10 @@
     font-family:system-ui,Segoe UI,Roboto,Arial}
   #wrap{position:relative;height:100vh;display:grid;place-items:center;overflow:hidden}
   canvas{display:block;border-radius:22px;box-shadow:var(--shadow);background:#ddd}
+  canvas {
+  touch-action: none;        /* verhindert Scrollen/Zoomen bei Touch */
+  -webkit-user-select: none; /* verhindert Textauswahl auf iOS */
+}
   .overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.78))}
   .card{width:min(780px,92vw);background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:28px}
   h1{margin:0 0 10px;font-size:clamp(28px,5vw,44px)}
@@ -134,6 +138,19 @@ let speedInput=null, speedVal=null;
 /* ===== Input ===== */
 canvas.addEventListener("pointermove",e=>{const r=canvas.getBoundingClientRect(); mouse.x=(e.clientX-r.left)*(W/r.width); mouse.y=(e.clientY-r.top)*(H/r.height); mouse.inside=true;});
 canvas.addEventListener("pointerleave",()=>mouse.inside=false);
+  // ---- Touch-Fallback für iOS ----
+canvas.addEventListener('touchstart', onTouch, {passive:false});
+canvas.addEventListener('touchmove',  onTouch, {passive:false});
+
+function onTouch(e){
+  const t = e.touches[0];
+  const r = canvas.getBoundingClientRect();
+  mouse.x = (t.clientX - r.left) * (W / r.width);
+  mouse.y = (t.clientY - r.top)  * (H / r.height);
+  mouse.inside = true;
+  e.preventDefault(); // verhindert Scrollen/Zoomen auf iOS
+}
+
 addEventListener("keydown",e=>{
   const k=e.key.toLowerCase();
   if(k==="s" && !running){ startFromUI(); }
@@ -317,5 +334,6 @@ setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
 </body>
 </html>
+
 
 
