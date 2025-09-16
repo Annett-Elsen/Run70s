@@ -308,6 +308,14 @@ function draw(pausedOnly){
 buildStartOverlay(); // Start-Overlay initial erzeugen
 setInterval(()=>{ hs=loadHS(); },1000); // HS im Blick
 </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js');
+    });
+  }
+</script>
 </body>
 </html>
+
 
